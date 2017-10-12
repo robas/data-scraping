@@ -10,14 +10,14 @@ fi
 
 # Check if the provided OAB code is valid
 if [ $1 -lt $FIRST_OAB ]; then
-    printf 'O código OAB deve ser maior que 10000'
+    printf 'The OAB code must be greater than 10000'
     exit 1
 fi
 
 initial_oab=$1
 qtd=$2
 
-echo "Scraping data from https://www2.oabsp.org.br/asp/consultaInscritos/consulta01.asp" $oab
+echo "Scraping data from https://www2.oabsp.org.br/asp/consultaInscritos/consulta01.asp"
 echo
 
 for oab_number in `seq $initial_oab $(($initial_oab + $qtd))`;do
