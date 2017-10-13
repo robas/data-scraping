@@ -3,23 +3,27 @@
 # The first OAB code is 10001
 FIRST_OAB=10001
 
-if [ $# -lt 2 ]; then
-    printf 'usage: %s [nro_oab] [quantidade]\n' "$(basename "$0")" >&2
+if [ $# -lt 1 ]; then
+    printf "usage: %s [initial_oab] [final_oab]\n" "$(basename "$0")" >&2
     exit 64
 fi
 
-# Check if the provided OAB code is valid
+# Check if the initial OAB code is valid
 if [ $1 -lt $FIRST_OAB ]; then
-    printf 'The OAB code must be greater than 10000'
+    printf "The OAB code must be greater than 10000\n"
     exit 1
+else
+    initial_oab=$1
 fi
 
-# Setting the amount of OAB codes to be scraped
-initial_oab=$1
-if [[ $2 > 0 ]]; then
-    final_oab=$(($initial_oab + $2 - 1))
+# Check if final OAB code was provided and is valid
+if [ $# == 1 ]; then
+    final_oab=$initial_oab
+elif [ $2 -lt $1 ]; then
+    printf "The final OAB code must be greater than the initial OAB code\n"
+    exit 1
 else
-    final_oab=$(($initial_oab + $2))
+    final_oab=$2
 fi
 
 # Setting the output filenames
