@@ -48,8 +48,6 @@ c.setopt(pycurl.HTTPHEADER, ['Connection: keep-alive'])
 
 # Iterating through oab_codes
 for oab_code in range(initial_oab,final_oab+1):
-    print oab_code
-    
     post_data = {'pagina': 0,
                 'tipo_consulta' : 1,
                 'nr_inscricao' : oab_code,
@@ -71,6 +69,7 @@ for oab_code in range(initial_oab,final_oab+1):
         if(no_results in response):
             with open(filename_nok, "a") as output_nok:
                 output_nok.write(str(oab_code)+",notfound\n")
+                print str(oab_code)+',notfound'
         else: 
             token=response.split('<li><span>')
             name=token[1].replace("</span></li>","")
@@ -84,8 +83,10 @@ for oab_code in range(initial_oab,final_oab+1):
             with open(filename_ok, "a") as output_ok:
                 writer = csv.writer(output_ok)
                 writer.writerow(fields)
+                print fields
     except:
         with open(filename_nok, "a") as output_nok:
                 output_nok.write(str(oab_code)+",timeout\n")
+                print str(oab_code) + ',timeout'
 
 c.close()
