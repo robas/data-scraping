@@ -3,7 +3,10 @@
 import requests
 from bs4 import BeautifulSoup
 
-# Retrieving food categories links from www.tabeladecalorias.net
+source_url = 'http://www.tabeladecalorias.net/'
+output_csv = 'ingredients.csv'
+
+# Retrieve food categories links from www.tabeladecalorias.net
 def get_links(url):
     links = list()
     page = requests.get(url)
@@ -13,14 +16,11 @@ def get_links(url):
         links.append(str(menu_item.find('a',href=True)['href']))
     return links
 
+# Retrieve food name, portion and calories per portion
 def get_ingredients(url):
     ingredients = list()
     page = requests.get(url)
-    # page = requests.get(url.encode('utf8'))
     soup = BeautifulSoup(page.content, 'html.parser')
-    # html = list(soup.children)[1]
-    # body = list(html.children)[1]
-    # processar cada string para criar os objetos 'ingredient'
     ingredients_table = soup.find('table', attrs={'id':'calories-table'})
     for ingredient in ingredients_table.find_all('tr', attrs={'class':'kt-row'}):
         ingredient_name = ingredient.find('td', attrs={'class':'food'}).get_text().encode('utf-8')
@@ -30,12 +30,10 @@ def get_ingredients(url):
     return ingredients
 
 
-url = 'http://www.tabeladecalorias.net/'
-links = get_links(url)
+
+links = get_links(source_url)
 for link in links:
-    print(link)
     ingredients = get_ingredients(link)
-    with open('ingredients.csv','ab') as file:
+    with open(output_csv,'ab') as file:
         for ingredient in ingredients:
-            file.write(ingredient)
-            file.write('\n')
+            file.write(ingredient+'\n')
